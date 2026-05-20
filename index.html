@@ -8,18 +8,28 @@
 <style>
 /* ── DESIGN TOKENS ── */
 :root {
-  --bg:   #0c0c0c;
-  --paper:#f0ebe0;
-  --red:  #8b1a1a;
-  --text: #e8e2d9;
-  --ok:   #4a7a4a;
-  --mid:  #8a7040;
-  --pad:  clamp(24px, 6vw, 72px);
-  /* WCAG AA compliant text colours on dark bg */
-  --body-dark:  #c8c4bc;   /* 5.8:1 on #0c0c0c */
-  --muted-dark: #7a7570;   /* used only for metadata/sources */
-  --body-paper: #3a3632;   /* 7.2:1 on #f0ebe0 */
-  --muted-paper:#6a6460;   /* 4.7:1 on #f0ebe0 */
+  --bg:         #0c0c0c;
+  --paper:      #f0ebe0;
+  --red:        #8b1a1a;
+  --red-bright: #b02020;     /* higher-contrast red for small text */
+  --text:       #e8e2d9;     /* primary on dark  — 13.2:1 on #0c0c0c */
+  --ok:         #4a7a4a;
+  --mid:        #8a7040;
+  --pad:        clamp(24px, 6vw, 72px);
+  /* WCAG AA ≥ 4.5:1 on dark bg */
+  --body-dark:  #c8c4bc;     /* 5.8:1 */
+  --muted-dark: #8a8580;     /* 4.6:1 — raised from 7a7570 */
+  --meta-dark:  #6a6560;     /* 3.8:1 — use ONLY for decorative / non-text */
+  /* WCAG AA ≥ 4.5:1 on paper bg */
+  --body-paper: #3a3632;     /* 7.2:1 */
+  --muted-paper:#5a5450;     /* 5.1:1 — raised from 6a6460 */
+  /* Shared UI tokens */
+  --btn-border:       rgba(232,226,217,0.18);
+  --btn-color:        rgba(232,226,217,0.50);
+  --btn-hover-border: rgba(232,226,217,0.45);
+  --btn-hover-color:  rgba(232,226,217,0.92);
+  --label-size:       clamp(9px, 1vw, 11px);
+  --label-spacing:    0.20em;
 }
 
 /* ── RESET ── */
@@ -42,9 +52,11 @@ html, body {
   scroll-snap-type:x mandatory;
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
-  /* smooth inertia */
   scroll-behavior:smooth;
+  cursor:grab;
+  touch-action:pan-x;
 }
+#stage.dragging { cursor:grabbing; }
 #stage::-webkit-scrollbar { display:none; }
 
 /* ── PANELS ── */
@@ -92,19 +104,20 @@ html, body {
 /* ── TYPOGRAPHY ── */
 .ey {
   font-family:'B612', monospace;
-  font-size:clamp(9px, 1.2vw, 11px);
-  letter-spacing:0.22em;
+  font-size:var(--label-size);
+  letter-spacing:var(--label-spacing);
   text-transform:uppercase;
   color:var(--text);
-  margin-bottom:clamp(8px,1.5vw,14px);
+  margin-bottom:clamp(10px,1.8vw,16px);
   display:inline-block;
-  background:rgba(139,26,26,0.72);
-  padding:2px 7px;
+  background:rgba(139,26,26,0.75);
+  padding:3px 8px;
   border-radius:2px;
   width:fit-content;
   max-width:fit-content;
+  line-height:1.6;
 }
-.paper .ey { color:#f0ebe0; background:rgba(139,26,26,0.62); }
+.paper .ey { color:#f0ebe0; background:rgba(139,26,26,0.65); }
 
 .h1 {
   font-family:'Anton', sans-serif;
@@ -175,7 +188,7 @@ html, body {
 .ca {
   font-family:'Anton', sans-serif;
   font-size:clamp(18px,3vw,40px);
-  color:#2a2020;
+  color:rgba(139,26,26,0.35);
   line-height:1;
   padding:0 clamp(6px,1.2vw,16px);
   opacity:0;
@@ -314,11 +327,11 @@ html, body {
 .pdt {
   font-family:'Inter', sans-serif;
   font-size:clamp(11px,1.2vw,12px);
-  color:#222; line-height:1.7;
+  color:transparent; line-height:1.7;
   max-height:0; overflow:hidden;
   transition:max-height 0.4s ease;
 }
-.pe.o .pdt { max-height:280px; color:var(--muted-dark); }
+.pe.o .pdt { max-height:280px; color:var(--body-dark); }
 .ptag {
   display:inline-block;
   font-family:'B612', monospace;
@@ -340,7 +353,7 @@ html, body {
   font-family:'Anton', sans-serif;
   font-size:clamp(11px,1.4vw,14px);
   letter-spacing:0.05em; text-transform:uppercase;
-  color:#666;
+  color:var(--muted-dark);
 }
 .tlv {
   font-family:'B612', monospace;
@@ -397,6 +410,27 @@ html, body {
   letter-spacing:0.06em; text-transform:uppercase;
 }
 .ld { width:8px; height:8px; border-radius:50%; }
+
+/* ── SHARED UI BUTTON ── */
+.ui-btn {
+  background: none;
+  border: 1px solid var(--btn-border);
+  color: var(--btn-color);
+  font-family: 'B612', monospace;
+  font-size: var(--label-size);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  cursor: pointer;
+  border-radius: 2px;
+  line-height: 1.6;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+}
+.ui-btn:hover {
+  color: var(--btn-hover-color);
+  border-color: var(--btn-hover-border);
+}
 
 /* ── NAV ── */
 #nav {
@@ -729,7 +763,7 @@ body::after {
     <div id="how-long-tagline" style="
       font-family:'Inter',sans-serif;
       font-size:clamp(13px,1.6vw,16px);
-      color:var(--text);
+      color:var(--body-dark);
       margin-top:clamp(20px,3vw,32px);
       line-height:1.9;
       opacity:0;
@@ -750,27 +784,16 @@ body::after {
   </div>
 
   <!-- ABOUT BUTTON -->
-  <!-- ABOUT BUTTON — top LEFT, clear of numbers -->
-  <button id="about-btn" onclick="document.getElementById('about-splash').style.opacity='1';document.getElementById('about-splash').style.pointerEvents='all';" style="
+  <!-- ABOUT BUTTON — bottom left, clear of nav dots and counter -->
+  <button id="about-btn" class="ui-btn" onclick="document.getElementById('about-splash').style.opacity='1';document.getElementById('about-splash').style.pointerEvents='all';" style="
     position:absolute;
-    bottom:clamp(52px,8vw,72px);
-    left:clamp(16px,2.5vw,28px);
+    bottom:clamp(52px,7vw,68px);
+    left:var(--pad);
     z-index:10;
-    background:none;
-    border:1px solid rgba(232,226,217,0.18);
-    color:rgba(232,226,217,0.45);
-    font-family:'B612',monospace;
-    font-size:clamp(8px,0.9vw,10px);
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    padding:6px 14px;
-    cursor:pointer;
-    border-radius:2px;
     opacity:0;
-    transition:opacity 0.8s ease, color 0.2s ease, border-color 0.2s ease;
     pointer-events:none;
-  " onmouseover="this.style.color='rgba(232,226,217,0.9)';this.style.borderColor='rgba(232,226,217,0.4)';"
-     onmouseout="this.style.color='rgba(232,226,217,0.45)';this.style.borderColor='rgba(232,226,217,0.18)';">
+    transition:opacity 0.8s ease, color 0.2s ease, border-color 0.2s ease;
+  ">
     About this project
   </button>
 
@@ -786,30 +809,18 @@ body::after {
     flex-direction:column;
     padding:clamp(28px,5vw,72px) clamp(28px,5vw,72px) clamp(28px,5vw,72px);
   ">
-    <!-- Top row: label left, close left of numbers -->
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:clamp(32px,5vw,56px);">
+    <!-- Top row: label left, close offset from counter -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:clamp(32px,5vw,56px);">
       <div style="
         font-family:'B612',monospace;
-        font-size:clamp(8px,0.85vw,10px);
-        letter-spacing:0.22em;
+        font-size:var(--label-size);
+        letter-spacing:var(--label-spacing);
         text-transform:uppercase;
         color:rgba(139,26,26,0.9);
+        line-height:1.6;
       ">About this project</div>
-      <button onclick="document.getElementById('about-splash').style.opacity='0';document.getElementById('about-splash').style.pointerEvents='none';" style="
-        background:none;
-        color:rgba(232,226,217,0.4);
-        font-family:'B612',monospace;
-        font-size:clamp(8px,0.9vw,10px);
-        letter-spacing:0.14em;
-        text-transform:uppercase;
-        cursor:pointer;
-        padding:5px 12px;
-        border:1px solid rgba(232,226,217,0.15);
-        border-radius:2px;
-        transition:color 0.2s, border-color 0.2s;
-        margin-right:clamp(64px,8vw,96px);
-      " onmouseover="this.style.color='rgba(232,226,217,0.85)';this.style.borderColor='rgba(232,226,217,0.4)';"
-         onmouseout="this.style.color='rgba(232,226,217,0.4)';this.style.borderColor='rgba(232,226,217,0.15)';">
+      <button class="ui-btn" onclick="document.getElementById('about-splash').style.opacity='0';document.getElementById('about-splash').style.pointerEvents='none';"
+        style="margin-right:clamp(72px,9vw,110px);">
         &larr; Close
       </button>
     </div>
@@ -821,10 +832,10 @@ body::after {
           font-family:'Inter',sans-serif;
           font-weight:300;
           font-size:clamp(16px,1.8vw,22px);
-          color:rgba(232,226,217,0.88);
+          color:var(--text);
           line-height:1.9;
         ">
-          <em style="font-style:normal;color:#e8e2d9;">Even With Your Eyes Turned Away</em> is a data visualization project about repeated histories of violence, discrimination, and selective attention.
+          <em style="font-style:normal;color:var(--text);font-weight:400;">Even With Your Eyes Turned Away</em> is a data visualization project about repeated histories of violence, discrimination, and selective attention.
           <br><br>
           Starting from Palestine, the project expands into a wider pattern: what gets documented, what gets ignored, and how long violence is allowed to continue in the background.
           <br><br>
@@ -846,32 +857,18 @@ body::after {
         font-family:'B612',monospace;
         font-size:clamp(10px,1.1vw,13px);
         letter-spacing:0.08em;
-        color:rgba(232,226,217,0.55);
+        color:var(--body-dark);
         line-height:2;
         max-width:min(500px,65%);
       ">
-        Created by <span style="color:rgba(232,226,217,0.85);">M.Z.</span>, as part of the <span style="color:rgba(232,226,217,0.85);">Design &amp; Visual Narrative</span> course<br>
-        at <span style="color:rgba(232,226,217,0.85);">AKTO Art &amp; Design College</span><br>
-        under the supervision of <span style="color:rgba(232,226,217,0.85);">Professor G. Theodorou</span>.
+        Created by <span style="color:var(--text);">M.Z.</span>, as part of the <span style="color:var(--text);">Design &amp; Visual Narrative</span> course<br>
+        at <span style="color:var(--text);">AKTO Art &amp; Design College</span><br>
+        under the supervision of <span style="color:var(--text);">Professor G. Theodorou</span>.
       </div>
 
       <!-- Return to start -->
-      <button onclick="document.getElementById('about-splash').style.opacity='0';document.getElementById('about-splash').style.pointerEvents='none';goTo(0);" style="
-        background:none;
-        border:1px solid rgba(232,226,217,0.15);
-        color:rgba(232,226,217,0.4);
-        font-family:'B612',monospace;
-        font-size:clamp(9px,1vw,11px);
-        letter-spacing:0.14em;
-        text-transform:uppercase;
-        padding:8px 18px;
-        cursor:pointer;
-        border-radius:2px;
-        white-space:nowrap;
-        transition:color 0.2s, border-color 0.2s;
-        flex-shrink:0;
-      " onmouseover="this.style.color='rgba(232,226,217,0.9)';this.style.borderColor='rgba(232,226,217,0.4)';"
-         onmouseout="this.style.color='rgba(232,226,217,0.4)';this.style.borderColor='rgba(232,226,217,0.15)';">
+      <button class="ui-btn" onclick="document.getElementById('about-splash').style.opacity='0';document.getElementById('about-splash').style.pointerEvents='none';goTo(0);"
+        style="flex-shrink:0;padding:6px 16px;">
         Return to start &rarr;
       </button>
     </div>
@@ -906,19 +903,26 @@ let wheelDelta = 0;
 
 window.addEventListener('wheel', (e) => {
   e.preventDefault();
-
   if (wheelLocked) return;
 
-  // Accumulate delta — trackpads send many small events
-  wheelDelta += Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+  const primary = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
 
-  if (Math.abs(wheelDelta) > 60) {
+  // Reset accumulator if direction reverses
+  if ((wheelDelta > 0 && primary < 0) || (wheelDelta < 0 && primary > 0)) {
+    wheelDelta = 0;
+  }
+
+  wheelDelta += primary;
+
+  // Lower threshold for mice (large discrete steps), higher for trackpads
+  const threshold = Math.abs(primary) > 50 ? 50 : 80;
+
+  if (Math.abs(wheelDelta) > threshold) {
     const dir = wheelDelta > 0 ? 1 : -1;
     goTo(Math.max(0, Math.min(cur + dir, total - 1)));
     wheelDelta = 0;
     wheelLocked = true;
-    // Unlock after transition completes
-    setTimeout(() => { wheelLocked = false; }, 800);
+    setTimeout(() => { wheelLocked = false; }, 750);
   }
 }, { passive: false });
 
@@ -1147,13 +1151,30 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(Math.max(cur - 1, 0));
 });
 
-// ── TOUCH ──
-let tx = 0, ty = 0;
-stage.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+// ── TOUCH (iPad & mobile) ──
+let tx = 0, ty = 0, tLocked = false;
+stage.addEventListener('touchstart', e => {
+  tx = e.touches[0].clientX;
+  ty = e.touches[0].clientY;
+  tLocked = false;
+}, { passive: true });
+
+stage.addEventListener('touchmove', e => {
+  if (tLocked) return;
+  const dx = e.touches[0].clientX - tx;
+  const dy = e.touches[0].clientY - ty;
+  // If predominantly horizontal, prevent page scroll and handle ourselves
+  if (Math.abs(dx) > Math.abs(dy) + 8) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
 stage.addEventListener('touchend', e => {
+  if (tLocked) return;
   const dx = e.changedTouches[0].clientX - tx;
   const dy = e.changedTouches[0].clientY - ty;
-  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 36) {
+    tLocked = true;
     goTo(dx < 0 ? Math.min(cur + 1, total - 1) : Math.max(cur - 1, 0));
   }
 });
