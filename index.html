@@ -750,10 +750,11 @@ body::after {
   </div>
 
   <!-- ABOUT BUTTON -->
+  <!-- ABOUT BUTTON — top LEFT, clear of numbers -->
   <button id="about-btn" onclick="document.getElementById('about-splash').style.opacity='1';document.getElementById('about-splash').style.pointerEvents='all';" style="
     position:absolute;
-    top:clamp(16px,2.5vw,28px);
-    right:clamp(16px,2.5vw,28px);
+    bottom:clamp(52px,8vw,72px);
+    left:clamp(16px,2.5vw,28px);
     z-index:10;
     background:none;
     border:1px solid rgba(232,226,217,0.18);
@@ -776,87 +777,89 @@ body::after {
   <!-- ABOUT SPLASH SCREEN -->
   <div id="about-splash" style="
     position:absolute;inset:0;
-    background:#0a0a0a;
+    background:#0c0c0c;
     z-index:20;
     opacity:0;
     pointer-events:none;
     transition:opacity 0.5s ease;
     display:flex;
     flex-direction:column;
-    padding:clamp(28px,5vw,72px) clamp(28px,5vw,72px) clamp(56px,8vw,96px);
+    padding:clamp(28px,5vw,72px) clamp(28px,5vw,72px) clamp(28px,5vw,72px);
   ">
-    <button onclick="document.getElementById('about-splash').style.opacity='0';document.getElementById('about-splash').style.pointerEvents='none';" style="
-      position:absolute;
-      top:clamp(16px,2.5vw,28px);
-      right:clamp(16px,2.5vw,28px);
-      background:none;border:none;
-      color:rgba(232,226,217,0.35);
-      font-family:'B612',monospace;
-      font-size:clamp(8px,0.9vw,10px);
-      letter-spacing:0.14em;
-      text-transform:uppercase;
-      cursor:pointer;
-      padding:6px 14px;
-      border:1px solid rgba(232,226,217,0.12);
-      border-radius:2px;
-      transition:color 0.2s, border-color 0.2s;
-    " onmouseover="this.style.color='rgba(232,226,217,0.8)';this.style.borderColor='rgba(232,226,217,0.35)';"
-       onmouseout="this.style.color='rgba(232,226,217,0.35)';this.style.borderColor='rgba(232,226,217,0.12)';">
-      &larr; Close
-    </button>
+    <!-- Top row: label left, close left of numbers -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:clamp(32px,5vw,56px);">
+      <div style="
+        font-family:'B612',monospace;
+        font-size:clamp(8px,0.85vw,10px);
+        letter-spacing:0.22em;
+        text-transform:uppercase;
+        color:rgba(139,26,26,0.9);
+      ">About this project</div>
+      <button onclick="document.getElementById('about-splash').style.opacity='0';document.getElementById('about-splash').style.pointerEvents='none';" style="
+        background:none;
+        color:rgba(232,226,217,0.4);
+        font-family:'B612',monospace;
+        font-size:clamp(8px,0.9vw,10px);
+        letter-spacing:0.14em;
+        text-transform:uppercase;
+        cursor:pointer;
+        padding:5px 12px;
+        border:1px solid rgba(232,226,217,0.15);
+        border-radius:2px;
+        transition:color 0.2s, border-color 0.2s;
+        margin-right:clamp(64px,8vw,96px);
+      " onmouseover="this.style.color='rgba(232,226,217,0.85)';this.style.borderColor='rgba(232,226,217,0.4)';"
+         onmouseout="this.style.color='rgba(232,226,217,0.4)';this.style.borderColor='rgba(232,226,217,0.15)';">
+        &larr; Close
+      </button>
+    </div>
 
-    <div style="
-      font-family:'B612',monospace;
-      font-size:clamp(8px,0.85vw,10px);
-      letter-spacing:0.22em;
-      text-transform:uppercase;
-      color:rgba(139,26,26,0.9);
-      margin-bottom:clamp(32px,5vw,56px);
-    ">About this project</div>
-
+    <!-- Body text -->
     <div style="flex:1;display:flex;align-items:center;">
-      <div style="max-width:min(560px,78%);">
+      <div style="max-width:min(620px,80%);">
         <div style="
           font-family:'Inter',sans-serif;
           font-weight:300;
-          font-size:clamp(15px,1.6vw,19px);
-          color:rgba(180,175,168,0.75);
-          line-height:2;
+          font-size:clamp(16px,1.8vw,22px);
+          color:rgba(232,226,217,0.88);
+          line-height:1.9;
         ">
-          <em style="font-style:normal;color:rgba(232,226,217,0.6);">Even With Your Eyes Turned Away</em> is a data visualization project about repeated histories of violence, discrimination, and selective attention.
+          <em style="font-style:normal;color:#e8e2d9;">Even With Your Eyes Turned Away</em> is a data visualization project about repeated histories of violence, discrimination, and selective attention.
           <br><br>
           Starting from Palestine, the project expands into a wider pattern: what gets documented, what gets ignored, and how long violence is allowed to continue in the background.
+          <br><br>
+          <span style="color:rgba(139,26,26,0.8);font-style:italic;font-size:clamp(13px,1.4vw,17px);letter-spacing:0.04em;">Data is not neutral when attention is selective.</span>
         </div>
       </div>
     </div>
 
+    <!-- Bottom row -->
     <div style="
       display:flex;
       justify-content:space-between;
       align-items:flex-end;
       padding-top:clamp(20px,3vw,32px);
-      padding-bottom:clamp(8px,1.5vw,16px);
-      border-top:1px solid rgba(232,226,217,0.06);
+      border-top:1px solid rgba(232,226,217,0.08);
     ">
+      <!-- Course info — all white/legible -->
       <div style="
         font-family:'B612',monospace;
         font-size:clamp(10px,1.1vw,13px);
         letter-spacing:0.08em;
-        color:rgba(120,115,110,0.6);
+        color:rgba(232,226,217,0.55);
         line-height:2;
-        max-width:min(480px,62%);
+        max-width:min(500px,65%);
       ">
-        Created by <span style="color:rgba(180,175,168,0.55);">M.Z.</span>, as part of the <span style="color:rgba(180,175,168,0.5);">Design &amp; Visual Narrative</span> course<br>
-        at <span style="color:rgba(180,175,168,0.5);">AKTO Art &amp; Design College</span><br>
-        under the supervision of <span style="color:rgba(180,175,168,0.5);">Professor G. Theodorou</span>.
-        <br><br>
-        <span style="color:rgba(139,26,26,0.7);letter-spacing:0.1em;font-style:italic;">Data is not neutral when attention is selective.</span>
+        Created by <span style="color:rgba(232,226,217,0.85);">M.Z.</span>, as part of the <span style="color:rgba(232,226,217,0.85);">Design &amp; Visual Narrative</span> course<br>
+        at <span style="color:rgba(232,226,217,0.85);">AKTO Art &amp; Design College</span><br>
+        under the supervision of <span style="color:rgba(232,226,217,0.85);">Professor G. Theodorou</span>.
       </div>
 
-      <button onclick="document.getElementById('about-splash').style.opacity='0';document.getElementById('about-splash').style.pointerEvents='none';document.getElementById('stage').scrollTo({left:0,behavior:'smooth'});" style="
+      <!-- Return to start -->
+      <button onclick="document.getElementById('about-splash').style.opacity='0';document.getElementById('about-splash').style.pointerEvents='none';goTo(0);" style="
         background:none;
-        border:1px solid rgba(232,226,217,0.12);
-        color:rgba(232,226,217,0.35);
+        border:1px solid rgba(232,226,217,0.15);
+        color:rgba(232,226,217,0.4);
         font-family:'B612',monospace;
         font-size:clamp(9px,1vw,11px);
         letter-spacing:0.14em;
@@ -867,10 +870,8 @@ body::after {
         white-space:nowrap;
         transition:color 0.2s, border-color 0.2s;
         flex-shrink:0;
-        align-self:flex-end;
-        margin-bottom:4px;
-      " onmouseover="this.style.color='rgba(232,226,217,0.85)';this.style.borderColor='rgba(232,226,217,0.35)';"
-         onmouseout="this.style.color='rgba(232,226,217,0.35)';this.style.borderColor='rgba(232,226,217,0.12)';">
+      " onmouseover="this.style.color='rgba(232,226,217,0.9)';this.style.borderColor='rgba(232,226,217,0.4)';"
+         onmouseout="this.style.color='rgba(232,226,217,0.4)';this.style.borderColor='rgba(232,226,217,0.15)';">
         Return to start &rarr;
       </button>
     </div>
